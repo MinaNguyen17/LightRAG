@@ -3,7 +3,6 @@ Configs for the LightRAG API.
 """
 
 import os
-import re
 import argparse
 import logging
 from dotenv import load_dotenv
@@ -376,9 +375,21 @@ def parse_args() -> argparse.Namespace:
     )
     args.enable_llm_cache = get_env_value("ENABLE_LLM_CACHE", True, bool)
 
+    args.use_parsing_model = get_env_value(
+        "USE_PARSING_MODEL", False, bool
+    )
+
     # Set document_loading_engine from --docling flag
     if args.docling:
         args.document_loading_engine = "DOCLING"
+    elif args.use_parsing_model:
+        args.document_loading_engine = "LLAMAPARSE"
+        args.llamaparse_api = get_env_value(
+            "LLAMA_CLOUD_API_KEY", ""
+        )
+        args.llama_tier = get_env_value(
+            "LLAMA_TIER", "cost_effective"
+        )
     else:
         args.document_loading_engine = get_env_value(
             "DOCUMENT_LOADING_ENGINE", "DEFAULT"
@@ -462,17 +473,6 @@ def parse_args() -> argparse.Namespace:
     ollama_server_infos.LIGHTRAG_NAME = args.simulated_model_name
     ollama_server_infos.LIGHTRAG_TAG = args.simulated_model_tag
 
-    # Sanitize workspace: only alphanumeric characters and underscores are allowed
-    if args.workspace:
-        sanitized = re.sub(r"[^a-zA-Z0-9_]", "_", args.workspace)
-        if sanitized != args.workspace:
-            logging.warning(
-                f"Workspace name '{args.workspace}' contains invalid characters. "
-                f"It has been sanitized to '{sanitized}'. "
-                "Only alphanumeric characters and underscores are allowed."
-            )
-            args.workspace = sanitized
-
     return args
 
 
@@ -482,7 +482,7 @@ def update_uvicorn_mode_config():
         original_workers = global_args.workers
         global_args.workers = 1
         # Log warning directly here
-        logging.debug(
+        logging.warning(
             f">> Forcing workers=1 in uvicorn mode(Ignoring workers={original_workers})"
         )
 
