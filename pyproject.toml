@@ -93,9 +93,9 @@ api = [
     "python-docx>=0.8.11,<2.0.0",  # DOCX processing
     "python-pptx>=0.6.21,<2.0.0",  # PPTX processing
     "asyncpg>=0.31.0",
-    "neo4j>=6.0.2",
-    "qdrant-client>=1.12.1",
+    "neo4j>=6.1.0",
     "pgvector>=0.4.2",
+    "qdrant-client>=1.17.1",
     "llama-cloud>=1.0",
 ]
 
@@ -160,6 +160,7 @@ observability = [
 [project.scripts]
 lightrag-server = "lightrag.api.lightrag_server:main"
 lightrag-gunicorn = "lightrag.api.run_with_gunicorn:main"
+lightrag-hash-password = "lightrag.tools.hash_password:main"
 lightrag-download-cache = "lightrag.tools.download_cache:main"
 lightrag-clean-llmqc = "lightrag.tools.clean_llm_query_cache:main"
 
@@ -177,7 +178,7 @@ exclude = ["data*", "tests*", "scripts*", "examples*", "dickens*", "reproduce*",
 include-package-data = true
 
 [tool.setuptools.dynamic]
-version = {attr = "lightrag.__version__"}
+version = {attr = "lightrag._version.__version__"}
 
 [tool.setuptools.package-data]
 lightrag = ["api/webui/**/*", "api/static/**/*"]
