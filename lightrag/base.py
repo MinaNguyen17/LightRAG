@@ -168,6 +168,8 @@ class QueryParam:
     containing citation information for the retrieved content.
     """
 
+    naive_query_embedding: Optional[List[float]] = None
+
 
 @dataclass
 class StorageNameSpace(ABC):

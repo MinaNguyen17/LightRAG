@@ -2760,6 +2760,7 @@ class LightRAG:
             model_func=param.model_func,
             user_prompt=param.user_prompt,
             enable_rerank=param.enable_rerank,
+            naive_query_embedding=param.naive_query_embedding
         )
 
         query_result = None
@@ -2787,6 +2788,7 @@ class LightRAG:
                 global_config,
                 hashing_kv=self.llm_response_cache,
                 system_prompt=None,
+                
             )
         elif data_param.mode == "bypass":
             logger.debug("[aquery_data] Using bypass mode")

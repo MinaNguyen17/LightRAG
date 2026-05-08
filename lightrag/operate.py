@@ -4997,7 +4997,7 @@ async def naive_query(
         logger.error("Tokenizer not found in global configuration.")
         return QueryResult(content=PROMPTS["fail_response"])
 
-    chunks = await _get_vector_context(query, chunks_vdb, query_param, None)
+    chunks = await _get_vector_context(query, chunks_vdb, query_param, query_param.naive_query_embedding)
 
     if chunks is None or len(chunks) == 0:
         logger.info(
